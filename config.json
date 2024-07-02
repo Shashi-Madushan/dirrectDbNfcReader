@@ -1,0 +1,16 @@
+
+  {
+    "ssid": "freee",
+    "password": "12345678",
+    "apPassword": "12345678",
+    "db_host": "127.0.0.1",
+    "db_user": "root",
+    "db_password": "Ijse@123",
+    "db_name": "food_organizer",
+    "db_port": 3306,
+    "startHour1": 9,
+    "endHour1": 17,
+    "startHour2": 18,
+    "endHour2": 22
+  }
+  
