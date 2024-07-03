@@ -34,7 +34,7 @@ MySQL_Connection conn(&client);
 
 // NTP Client
 WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "pool.ntp.org", 0, 60000);
+NTPClient timeClient(ntpUDP, "asia.pool.ntp.org", 5.5 * 3600, 60000);
 
 // Time ranges
 int startHour1;
@@ -60,6 +60,7 @@ void beepBuzzer(int duration);
 String readNFCString();
 
 void setup() {
+  delay(1000);
   Serial.begin(115200);
   SPI.begin();
   mfrc522.PCD_Init();
@@ -81,55 +82,57 @@ void setup() {
 
 void loop() {
   server.handleClient();
-  timeClient.update();
+  if(WiFi.status() == WL_CONNECTED){
+    timeClient.update();
 
-  int currentHour = timeClient.getHours();
+    int currentHour = timeClient.getHours();
 
-  if ((currentHour >= startHour1 && currentHour < endHour1) ||
-      (currentHour >= startHour2 && currentHour < endHour2)) {
+    if ((currentHour >= startHour1 && currentHour < endHour1) ||
+        (currentHour >= startHour2 && currentHour < endHour2)) {
 
-    if (!mfrc522.PICC_IsNewCardPresent()) {
-      delay(50);
-      return;
-    }
-
-    if (!mfrc522.PICC_ReadCardSerial()) {
-      delay(50);
-      return;
-    }
-
-    // Read string data from the card
-    String cardData = readNFCString();
-
-    if (cardData != "") {
-      Serial.println("Card Data: " + cardData);
-      beepBuzzer(100); // Beep the buzzer for 100ms
-      
-      // Prepare SQL query
-      char query[256];
-      sprintf(query, "INSERT INTO test (name) VALUES ('%s')",  cardData.c_str());
-
-      // Execute SQL query
-      ensureMySQLConnection();
-      if (conn.connected()) {
-        MySQL_Cursor* cursor = new MySQL_Cursor(&conn);
-        cursor->execute(query);
-        delete cursor;
-        Serial.println("Entry added to database.");
-      } else {
-        Serial.println("Not connected to MySQL server.");
+      if (!mfrc522.PICC_IsNewCardPresent()) {
+        delay(50);
+        return;
       }
 
-      delay(5000); // 5-second delay after a card is read
-    } else {
-      Serial.println("No data read from card.");
-    }
+      if (!mfrc522.PICC_ReadCardSerial()) {
+        delay(50);
+        return;
+      }
 
-    // Halt the PICC and stop encryption
-    mfrc522.PICC_HaltA();
-    mfrc522.PCD_StopCrypto1();
-  } else {
-    Serial.println("Out of time range.");
+      // Read string data from the card
+      String cardData = readNFCString();
+
+      if (cardData != "") {
+        Serial.println("Card Data: " + cardData);
+        beepBuzzer(100); // Beep the buzzer for 100ms
+        
+        // Prepare SQL query
+        char query[256];
+        sprintf(query, "INSERT INTO test (name) VALUES ('%s')",  cardData.c_str());
+
+        // Execute SQL query
+        ensureMySQLConnection();
+        if (conn.connected()) {
+          MySQL_Cursor* cursor = new MySQL_Cursor(&conn);
+          cursor->execute(query);
+          delete cursor;
+          Serial.println("Entry added to database.");
+        } else {
+          Serial.println("Not connected to MySQL server.");
+        }
+
+        delay(5000); // 5-second delay after a card is read
+      } else {
+        Serial.println("No data read from card.");
+      }
+
+      // Halt the PICC and stop encryption
+      mfrc522.PICC_HaltA();
+      mfrc522.PCD_StopCrypto1();
+    } else {
+      Serial.println("Out of time range.");
+    }
   }
 }
 
