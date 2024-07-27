@@ -95,7 +95,7 @@ This project is designed to track employee attendance using NFC cards. The syste
 ## Usage
 
 1. Power up the ESP8266 D1 Mini.
-2.The NeoPixel LED strip will indicate the following statuses.
+2. The NeoPixel LED strip will indicate the following statuses.
 
     - **1st LED (WiFi Status)**:
       - **Solid Blue**: Connected
