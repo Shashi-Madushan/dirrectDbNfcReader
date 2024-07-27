@@ -83,7 +83,7 @@ This project is designed to track employee attendance using NFC cards. The syste
 
 3. Create a MySQL database with a table named `orders`:
     ```sql
-    CREATE TABLE orders (
+    CREATE TABLE attendence (
         id INT AUTO_INCREMENT PRIMARY KEY,
         employee_id VARCHAR(255) NOT NULL,
         date DATE NOT NULL,
