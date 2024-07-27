@@ -95,20 +95,36 @@ This project is designed to track employee attendance using NFC cards. The syste
 ## Usage
 
 1. Power up the ESP8266 D1 Mini.
-2. The NeoPixel LED strip will indicate the status:
-    - Solid blue: WiFi connected
-    - Solid green: MySQL connected
-    - Red blinking: Issues with connections or NFC reading
+2.The NeoPixel LED strip will indicate the following statuses:
+
+- **1st LED (WiFi Status)**:
+  - **Solid Blue**: Connected
+  - **Blinking Green**: Connecting
+  - **Solid Red**: Connection Failed
+
+- **2nd LED (MySQL Status)**:
+  - **Solid Blue**: Connected
+  - **Blinking Red**: Connecting
+  - **Solid Red**: Connection Failed
+
+- **3rd and 4th LEDs (NFC Status)**:
+  - **Red**: In the time range (waiting for a card)
+  - **Both Green for 5 seconds**: Card placed, indicating success
+  - **Then back to Red**: Waiting for another card
+
 3. Use the web interface to configure WiFi and MySQL settings.
 4. Tap an NFC card to the MFRC522 reader to record attendance.
 
 ## Configuration
 
+First wait untill the wifi connection mod to stop (1min , First led stop blinking ) 
+
 1. Connect to the ESP8266 AP named `NFC_v1.0.1_Config` using the default password.
 2. Open a browser and navigate to `http://192.168.4.1/`.
 3. Fill in the WiFi and MySQL configuration details.
 4. Save the configuration and the device will restart with the new settings.
+5. When the device is connected to the given wifi ssid you can configure the device by accessing it by the device ip (look for your router's connected devices section) 
 
 ## License
 
-This project is licensed under the MIT License.
+
