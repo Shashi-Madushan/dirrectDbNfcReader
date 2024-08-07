@@ -132,6 +132,7 @@ void loop() {
 
       if (cardData != "") {
         Serial.println("Card Data: " + cardData);
+         cardData.trim();
         beepBuzzer(100); // Beep the buzzer for 100ms
 
         time_t rawTime = timeClient.getEpochTime();
